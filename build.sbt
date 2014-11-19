@@ -18,3 +18,9 @@ testOptions in Test += Tests.Argument(TestFrameworks.ScalaCheck, "-maxSize", "5"
 ivyScala := ivyScala.value map { _.copy(overrideScalaVersion = true) }
 
 jmhSettings
+
+// libraryDependencies += "org.scala-miniboxing.plugins" %% "miniboxing-runtime" % "0.4-SNAPSHOT"
+
+// addCompilerPlugin("org.scala-miniboxing.plugins" %% "miniboxing-plugin" % "0.4-SNAPSHOT")
+
+// scalacOptions ++= Seq("-P:minibox:warn", "-P:minibox:mark-all")

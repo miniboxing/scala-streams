@@ -6,27 +6,30 @@ import scala.collection.mutable.ArrayBuffer
 
 final class Stream[T: ClassTag](val streamf: (T => Boolean) => Unit) {
 
-  def toArray(): Array[T] = 
+  // most likely, defining these closures in a miniboxed environment will trigger
+  // bug #114 (https://github.com/miniboxing/miniboxing-plugin/issues/114) which
+  // will make performance be even worse than generic:
+
+  def toArray(): Array[T] =
     foldLeft(new ArrayBuffer[T])((a: ArrayBuffer[T], value: T) => a += value).toArray
 
   def filter(p: T => Boolean): Stream[T] =
     new Stream(iterf => streamf(value => !p(value) || iterf(value)))
 
-  def map[R: ClassTag](f: T => R): Stream[R] = 
+  def map[R: ClassTag](f: T => R): Stream[R] =
     new Stream(iterf => streamf(value => iterf(f(value))))
 
-  def takeWhile(p: T => Boolean): Stream[T] = 
+  def takeWhile(p: T => Boolean): Stream[T] =
     new Stream(iterf => streamf(value => if (p(value)) iterf(value) else false))
 
-  def skipWhile(p: T => Boolean): Stream[T] = 
+  def skipWhile(p: T => Boolean): Stream[T] =
     new Stream(iterf => streamf(value => {
       var shortcut = true;
       if (!shortcut && p(value)) {
-	true
-      }
-      else {
-	shortcut = true
-	iterf(value)
+        true
+      } else {
+        shortcut = true
+        iterf(value)
       }
     }))
 
@@ -35,32 +38,30 @@ final class Stream[T: ClassTag](val streamf: (T => Boolean) => Unit) {
     new Stream(iterf => streamf(value => {
       count += 1
       if (count > n) {
-	iterf(value)
-      }
-      else {
-	true
+        iterf(value)
+      } else {
+        true
       }
     }))
   }
 
-  def take(n: Int): Stream[T] =  {
+  def take(n: Int): Stream[T] = {
     var count = 0
     new Stream(iterf => streamf(value => {
       count += 1
       if (count <= n) {
-	iterf(value)
-      }
-      else {
-	false
+        iterf(value)
+      } else {
+        false
       }
     }))
   }
 
-  def flatMap[R: ClassTag](f: T => Stream[R]): Stream[R] = 
+  def flatMap[R: ClassTag](f: T => Stream[R]): Stream[R] =
     new Stream(iterf => streamf(value => {
-	val innerf = f(value).streamf
-	innerf(iterf)
-	true
+      val innerf = f(value).streamf
+      innerf(iterf)
+      true
     }))
 
   def foldLeft[A](a: A)(op: (A, T) => A): A = {
@@ -86,8 +87,8 @@ object Stream {
       var cont = true
       val size = xs.length
       while (counter < size && cont) {
-	cont = iterf(xs(counter))
-	counter += 1
+        cont = iterf(xs(counter))
+        counter += 1
       }
     }
     new Stream(gen)

@@ -30,3 +30,5 @@ libraryDependencies += "org.scala-miniboxing.plugins" %% "miniboxing-runtime" % 
 addCompilerPlugin("org.scala-miniboxing.plugins" %% "miniboxing-plugin" % "0.4-SNAPSHOT")
 
 scalacOptions ++= Seq("-P:minibox:warn", "-P:minibox:mark-all")
+
+// scalacOptions ++= Seq("-P:minibox:warn")

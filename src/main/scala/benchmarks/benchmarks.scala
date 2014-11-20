@@ -142,6 +142,8 @@ package benchmarks {
       res
     }
 
+
+
     // Streams
     @Benchmark
     def streams_sum(): Long = {
@@ -153,7 +155,9 @@ package benchmarks {
     @Benchmark
     def streams_sumOfSquares(): Long = {
       val sum: Long = Stream(v)
-        .map(d => d * d)
+        .map(new MbFunction1[Long, Long] {
+          def apply(d: Long): Long = d * d
+        })
         .sum
       sum
     }
@@ -161,8 +165,12 @@ package benchmarks {
     @Benchmark
     def streams_sumOfSquaresEven(): Long = {
       val res: Long = Stream(v)
-        .filter(x => x % 2 == 0)
-        .map(x => x * x)
+        .filter(new MbFunction1[Long, Boolean] {
+          def apply(x: Long): Boolean = (x % 2 == 0)
+        })
+        .map(new MbFunction1[Long, Long] {
+          def apply(d: Long): Long = d * d
+        })
         .sum
       res
     }
@@ -170,7 +178,13 @@ package benchmarks {
     @Benchmark
     def streams_cart(): Long = {
       val sum: Long = Stream(vHi)
-        .flatMap(d => Stream(vLo).map(dp => dp * d))
+        .flatMap(new MbFunction1[Long, Stream[Long]] {
+          def apply(d: Long): Stream[Long] =
+            Stream(vLo)
+              .map(new MbFunction1[Long, Long] {
+                def apply(dp: Long): Long = dp * d
+              })
+        })
         .sum
       sum
     }
@@ -178,8 +192,12 @@ package benchmarks {
     @Benchmark
     def streams_ref(): Long = {
       val res: Long = Stream(refs)
-        .filter(_.num % 5 == 0)
-        .filter(_.num % 7 == 0)
+        .filter(new MbFunction1[Ref, Boolean] {
+          def apply(x: Ref): Boolean = (x.num % 5 == 0)
+        })
+        .filter(new MbFunction1[Ref, Boolean] {
+          def apply(x: Ref): Boolean = (x.num % 7 == 0)
+        })
         .size
       res
     }

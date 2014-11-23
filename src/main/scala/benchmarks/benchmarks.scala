@@ -142,8 +142,6 @@ package benchmarks {
       res
     }
 
-
-
     // Streams
     @Benchmark
     def streams_sum(): Long = {

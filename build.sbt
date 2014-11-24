@@ -13,7 +13,7 @@ libraryDependencies ++= Seq(
 
 scalacOptions ++= Seq("-optimise")
 
-javaOptions in run ++= Seq("-Xmx3G", "-Xms3G")
+javaOptions in run ++= Seq("-Xmx3G", "-Xms3G", "-XX:+UseParallelGC")
 
 testOptions in Test += Tests.Argument(TestFrameworks.ScalaCheck, "-maxSize", "5", "-minSuccessfulTests", "100", "-workers", "1", "-verbosity", "1")
 

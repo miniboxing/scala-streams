@@ -1,3 +1,5 @@
+import JmhKeys._
+
 name := "scala-streams"
 
 version := "1.0"
@@ -22,6 +24,8 @@ ivyScala := ivyScala.value map { _.copy(overrideScalaVersion = true) }
 // jmh:
 
 jmhSettings
+
+version in Jmh := "1.1.1"
 
 // eclipse:
 

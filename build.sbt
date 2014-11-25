@@ -25,8 +25,6 @@ ivyScala := ivyScala.value map { _.copy(overrideScalaVersion = true) }
 
 jmhSettings
 
-version in Jmh := "1.1.1"
-
 // eclipse:
 
 com.typesafe.sbteclipse.plugin.EclipsePlugin.EclipseKeys.withSource := true

@@ -17,9 +17,19 @@ libraryDependencies ++= Seq(
 // 		      "-Yclosure-elim",
 // 		      "-Yinline")
 
-javaOptions in run ++= Seq("-Xms3G")
+unmanagedJars in Compile := Seq(Attributed.blank(file("jmh-profilers/target/jmh-profilers-0.1.jar")))
 
-testOptions in Test += Tests.Argument(TestFrameworks.ScalaCheck, "-maxSize", "5", "-minSuccessfulTests", "100", "-workers", "1", "-verbosity", "1")
+javaOptions in run ++= Seq("-XX:+UnlockCommercialFeatures", 
+			   "-XX:+FlightRecorder",
+			   "-Xms3G" , 
+			   "-verbose:gc", 
+			   "-XX:-UseAdaptiveSizePolicy")
+
+testOptions in Test += Tests.Argument(TestFrameworks.ScalaCheck, 
+				      "-maxSize", "5", 
+				      "-minSuccessfulTests", 
+				      "100", "-workers", "1", 
+				      "-verbosity", "1")
 
 ivyScala := ivyScala.value map { _.copy(overrideScalaVersion = true) }
 

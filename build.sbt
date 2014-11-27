@@ -6,6 +6,10 @@ version := "1.0"
 
 scalaVersion := "2.11.4"
 
+// scalacOptions ++= Seq("-optimise", "-Yclosure-elim", "-Yinline")
+
+// dependencies:
+
 resolvers ++= Seq(Resolver.sonatypeRepo("releases"), Resolver.sonatypeRepo("snapshots"))
 
 libraryDependencies ++= Seq(
@@ -13,11 +17,11 @@ libraryDependencies ++= Seq(
   "org.scala-lang" % "scala-reflect" % "2.11.4"
 )
 
-// scalacOptions ++= Seq("-optimise", 
-// 		      "-Yclosure-elim",
-// 		      "-Yinline")
+ivyScala := ivyScala.value map { _.copy(overrideScalaVersion = true) }
 
-unmanagedJars in Compile := Seq(Attributed.blank(file("jmh-profilers/target/jmh-profilers-0.1.jar")))
+// jvm options:
+
+// unmanagedJars in Compile := Seq(Attributed.blank(file("jmh-profilers/target/jmh-profilers-0.1.jar")))
 
 javaOptions in run ++= Seq("-XX:+UnlockCommercialFeatures", 
 			   "-XX:+FlightRecorder",
@@ -25,13 +29,13 @@ javaOptions in run ++= Seq("-XX:+UnlockCommercialFeatures",
 			   "-verbose:gc", 
 			   "-XX:-UseAdaptiveSizePolicy")
 
+// test options
+
 testOptions in Test += Tests.Argument(TestFrameworks.ScalaCheck, 
 				      "-maxSize", "5", 
 				      "-minSuccessfulTests", 
 				      "100", "-workers", "1", 
 				      "-verbosity", "1")
-
-ivyScala := ivyScala.value map { _.copy(overrideScalaVersion = true) }
 
 // jmh:
 
@@ -48,5 +52,3 @@ libraryDependencies += "org.scala-miniboxing.plugins" %% "miniboxing-runtime" % 
 addCompilerPlugin("org.scala-miniboxing.plugins" %% "miniboxing-plugin" % "0.4-SNAPSHOT")
 
 scalacOptions ++= Seq("-P:minibox:warn", "-P:minibox:mark-all")
-
-// scalacOptions ++= Seq("-P:minibox:warn")

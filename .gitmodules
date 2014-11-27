@@ -1,3 +1,0 @@
-[submodule "jmh-profilers"]
-	path = jmh-profilers
-	url = git@github.com:biboudis/jmh-profilers.git
